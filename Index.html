@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Novel Gothic: Kastil Ravenwood - Versi Horor</title>
+    <style>
+        /* CSS untuk styling game dengan tema gothic dan horor */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Creepster', cursive; /* Font gothic */
+            background-color: #1a1a1a;
+        }
+        
+        #game {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #background {
+            width: 100%;
+            height: 100%;
+            background-image: url('../RavenWood/gambar/kastil_horor.jpeg'); /* Gambar latar belakang kastil horor, ganti jika diperlukan */
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.6); /* Lebih gelap untuk efek horor */
+        }
+        
+        #text-box {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #e0e0e0;
+            padding: 30px;
+            box-sizing: border-box;
+            font-size: 18px;
+            text-align: center;
+            border-top: 2px solid #8b0000;
+        }
+        
+        #choices {
+            position: absolute;
+            bottom: 150px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .choice-button {
+            background-color: #4a0000;
+            color: #ffffff;
+            padding: 15px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+        }
+        
+        .choice-button:hover {
+            background-color: #8b0000;
+        }
+        
+        #character-image {
+            position: absolute;
+            bottom: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: auto;
+            border: 2px solid #8b0000;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="background"></div>
+        <img id="character-image" style="width: 300px; display: none;">
+        <div id="text-box">Selamat datang di Kastil Ravenwood, kastil horor penuh kutukan. Tekan tombol untuk memulai...</div>
+        <div id="choices"></div>
+    </div>
+
+    <script>
+        // JavaScript untuk logika game dengan alur cerita horor yang lebih kompleks
+        const gameData = {
+            start: {
+                text: "Kamu tiba di depan Kastil Ravenwood, yang sekarang terlihat lebih mengerikan dengan kabut tebal dan suara aneh. Angin membawa bisikan hantu. Apa yang akan kamu lakukan?",
+                image: "gambar/karakter1.jpeg", // Karakter pemain
+                choices: [
+                    { text: "Masuk ke kastil", next: "enterCastle" },
+                    { text: "Pergi dari sini", next: "leaveCastle" }
+                ]
+            },
+            enterCastle: {
+                text: "Kamu memasuki kastil yang gelap. Pintu berderit, dan kamu merasakan kehadiran makhluk horor. Di lorong, seorang pelayan misterius menunggu.",
+                image: "gambar/karakter2.jpeg", // Pelayan misterius
+                choices: [
+                    { text: "Dekati pelayan itu", next: "approachServant" },
+                    { text: "Jelajahi lorong sendiri", next: "exploreHallway" },
+                    { text: "Cari ruang bawah tanah (baru)", next: "basementExploration" } // Pilihan baru untuk horor
+                ]
+            },
+            leaveCastle: {
+                text: "Kamu pergi dari kastil, tapi mimpi buruk terus menghantui. Akhir yang aman, tapi tidak memuaskan.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 1 (sebelumnya)
+            },
+            approachServant: {
+                text: "Pelayan itu mengungkapkan rahasia horor: 'Kastil ini dipenuhi makhluk gelap. Apakah kamu berani?' Tiba-tiba, suara mengerikan terdengar.",
+                image: "gambar/karakter1.jpeg",
+                choices: [
+                    { text: "Tanyakan lebih lanjut", next: "askSecret" },
+                    { text: "Cabut dan lari", next: "runAway" }
+                ]
+            },
+            exploreHallway: {
+                text: "Di lorong, kamu menemukan ruangan dengan lukisan hantu. Tapi ada suara menggeram dari kegelapan.",
+                image: "gambar/hantu_mengerikan.jpeg", // Gambar horor baru
+                choices: [
+                    { text: "Buka pintu ruangan", next: "openDoor" },
+                    { text: "Kembali ke pelayan", next: "returnToServant" },
+                    { text: "Sembunyikan diri", next: "hideFromHorror" } // Pilihan baru menuju ending baru
+                ]
+            },
+            basementExploration: { // Scene baru untuk horor
+                text: "Kamu turun ke ruang bawah tanah yang penuh darah dan bayangan. Makhluk gelap menunggu di sana!",
+                image: "gambar/makhluk_gelap.jpeg", // Gambar makhluk horor baru
+                choices: [
+                    { text: "Hadapi makhluk itu", next: "faceCreature" },
+                    { text: "Cari jalan keluar cepat", next: "escapeBasement" }
+                ]
+            },
+            askSecret: {
+                text: "Pelayan menceritakan kutukan: 'Makhluk ini akan menangkapmu!' Hantu muncul.",
+                image: "gambar/hantu_mengerikan.jpeg",
+                choices: [
+                    { text: "Hadapi hantu", next: "faceGhost" },
+                    { text: "Coba lari", next: "tryToRun" }
+                ]
+            },
+            runAway: {
+                text: "Kamu berlari, tapi tersesat. Akhir yang ambigu.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 2 (sebelumnya)
+            },
+            openDoor: {
+                text: "Kamu menemukan harta, tapi makhluk menyerang!",
+                image: "gambar/makhluk_gelap.jpeg",
+                choices: [
+                    { text: "Ambil harta dan lari", next: "takeTreasure" },
+                    { text: "Lawan makhluk", next: "fightGhost" }
+                ]
+            },
+            returnToServant: {
+                text: "Pelayan berubah menjadi hantu. Kamu terjebak.",
+                image: "gambar/hantu_mengerikan.jpeg",
+                choices: [] // Ending 3 (sebelumnya)
+            },
+            faceGhost: {
+                text: "Kamu mengalahkan hantu dan mewarisi kastil. Akhir bahagia!",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 4 (sebelumnya)
+            },
+            tryToRun: {
+                text: "Kamu tertangkap oleh hantu. Game over.",
+                image: "gambar/hantu_mengerikan.jpeg",
+                choices: [] // Ending 5 (baru: Kematian horor)
+            },
+            takeTreasure: {
+                text: "Kamu kabur dengan harta, tapi terkutuk. Akhir campuran.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 6 (baru: Kabur dengan harga)
+            },
+            fightGhost: {
+                text: "Kamu kalah dari makhluk. Menjadi bagian kutukan.",
+                image: "gambar/makhluk_gelap.jpeg",
+                choices: [] // Ending 7 (baru: Terkutuk selamanya)
+            },
+            hideFromHorror: { // Scene baru menuju ending baru
+                text: "Kamu bersembunyi, tapi makhluk menemukanmu. Apa selanjutnya?",
+                image: "gambar/makhluk_gelap.jpeg",
+                choices: [
+                    { text: "Serang dari persembunyian", next: "attackFromHide" },
+                    { text: "Tunggu hingga aman", next: "waitInHide" }
+                ]
+            },
+            faceCreature: { // Scene baru
+                text: "Kamu menghadapi makhluk dan mengungkap rahasia penuh. Kamu menjadi raja kastil dengan twist gelap.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 8 (baru: Raja kastil)
+            },
+            escapeBasement: {
+                text: "Kamu lolos dari ruang bawah tanah, tapi trauma abadi. Akhir selamat dengan konsekuensi.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 9 (baru: Selamat tapi tertrauma)
+            },
+            attackFromHide: {
+                text: "Seranganmu berhasil, tapi makhluk melukaiimu parah. Kamu selamat, tapi tidak utuh.",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 10 (baru: Selamat dengan luka)
+            },
+            waitInHide: {
+                text: "Makhluk pergi, dan kamu menemukan jalan keluar. Akhir yang mengejutkan!",
+                image: "gambar/karakter1.jpeg",
+                choices: [] // Ending 11 (baru: Keluar aman)
+            }
+        };
+
+        let currentScene = 'start';
+
+        function renderScene(sceneKey) {
+            const scene = gameData[sceneKey];
+            document.getElementById('text-box').innerHTML = scene.text;
+            document.getElementById('character-image').src = scene.image;
+            document.getElementById('character-image').style.display = 'block';
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+
+            if (scene.choices.length > 0) {
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.innerText = choice.text;
+                    button.className = 'choice-button';
+                    button.onclick = () => {
+                        currentScene = choice.next;
+                        renderScene(currentScene);
+                    };
+                    choicesDiv.appendChild(button);
+                });
+            } else {
+                const restartButton = document.createElement('button');
+                restartButton.innerText = 'Main Ulang';
+                restartButton.className = 'choice-button';
+                restartButton.onclick = () => {
+                    currentScene = 'start';
+                    renderScene(currentScene);
+                };
+                choicesDiv.appendChild(restartButton);
+            }
+        }
+
+        window.onload = () => {
+            renderScene(currentScene);
+        };
+    </script>
+</body>
+</html>
